@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>University Course Registration System</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script defer src="/app.js"></script>
+</head>
+<body data-page="home">
+  <header class="header">
+    <div>
+      <h1>University Course Registration System</h1>
+      <p class="subtitle">Secure JWT authentication demo.</p>
+    </div>
+  </header>
+
+  <main class="container center">
+    <section class="panel auth-panel">
+      <h2>Login</h2>
+      <div class="field">
+        <label for="login-username">Username</label>
+        <input id="login-username" type="text" />
+      </div>
+      <div class="field">
+        <label for="login-password">Password</label>
+        <input id="login-password" type="password" />
+      </div>
+      <button id="login-btn" class="full">Login</button>
+      <div id="login-error" class="error"></div>
+      <p class="hint center-text">Don't have an account? <a href="/register.html">Register here</a></p>
+    </section>
+  </main>
+</body>
+</html>

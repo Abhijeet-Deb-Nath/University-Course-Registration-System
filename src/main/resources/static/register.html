@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Register - Course Registration</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script defer src="/app.js"></script>
+</head>
+<body data-page="register">
+  <header class="header">
+    <div>
+      <h1>University Course Registration System</h1>
+      <p class="subtitle">Create your account.</p>
+    </div>
+  </header>
+
+  <main class="container center">
+    <section class="panel auth-panel">
+      <h2>Register</h2>
+      <div class="field">
+        <label for="reg-username">Username</label>
+        <input id="reg-username" type="text" />
+      </div>
+      <div class="field">
+        <label for="reg-password">Password</label>
+        <input id="reg-password" type="password" />
+      </div>
+      <div class="field">
+        <label for="reg-role">Role</label>
+        <select id="reg-role">
+          <option value="STUDENT">STUDENT</option>
+          <option value="TEACHER">TEACHER</option>
+        </select>
+      </div>
+      <button id="register-btn" class="full">Register</button>
+      <div id="register-error" class="error"></div>
+      <p class="hint center-text">Already have an account? <a href="/index.html">Login here</a></p>
+    </section>
+  </main>
+</body>
+</html>

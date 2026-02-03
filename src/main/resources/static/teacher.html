@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Teacher Dashboard</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script defer src="/app.js"></script>
+</head>
+<body data-page="teacher">
+  <header class="header">
+    <div>
+      <h1>Teacher Dashboard</h1>
+      <p class="subtitle">Create courses and manage your students.</p>
+    </div>
+    <div class="user-info">
+      <span id="user-display"></span>
+      <button id="logout-btn" class="ghost">Logout</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="panel">
+      <h2>Create Course</h2>
+      <div class="field">
+        <label for="course-no">Course No</label>
+        <input id="course-no" type="text" />
+      </div>
+      <div class="field">
+        <label for="course-name">Course Name</label>
+        <input id="course-name" type="text" />
+      </div>
+      <button id="course-create-btn">Create</button>
+    </section>
+
+    <section class="panel">
+      <h2>Update Course</h2>
+      <div class="field">
+        <label for="course-update-id">Course Id</label>
+        <input id="course-update-id" type="number" />
+      </div>
+      <div class="field">
+        <label for="course-update-no">Course No</label>
+        <input id="course-update-no" type="text" />
+      </div>
+      <div class="field">
+        <label for="course-update-name">Course Name</label>
+        <input id="course-update-name" type="text" />
+      </div>
+      <button id="course-update-btn">Update</button>
+    </section>
+
+    <section class="panel">
+      <h2>Delete Course</h2>
+      <div class="field">
+        <label for="course-delete-id">Course Id</label>
+        <input id="course-delete-id" type="number" />
+      </div>
+      <button id="course-delete-btn" class="danger">Delete</button>
+    </section>
+
+    <section class="panel">
+      <h2>My Courses</h2>
+      <p class="hint">Courses you teach.</p>
+      <button id="courses-mine-btn">Load My Courses</button>
+      <div id="courses-list" class="data-list"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Course Students</h2>
+      <div class="field">
+        <label for="course-students-id">Course Id</label>
+        <input id="course-students-id" type="number" />
+      </div>
+      <button id="course-students-btn">Load Students</button>
+      <div id="students-list" class="data-list"></div>
+    </section>
+
+    <section class="panel wide">
+      <h2>Response</h2>
+      <div id="status-line" class="status">Ready</div>
+      <pre id="response-output">{}</pre>
+    </section>
+  </main>
+</body>
+</html>

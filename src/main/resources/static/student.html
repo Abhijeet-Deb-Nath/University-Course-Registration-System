@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script defer src="/app.js"></script>
+</head>
+<body data-page="student">
+  <header class="header">
+    <div>
+      <h1>Student Dashboard</h1>
+      <p class="subtitle">Browse courses and manage your registrations.</p>
+    </div>
+    <div class="user-info">
+      <span id="user-display"></span>
+      <button id="logout-btn" class="ghost">Logout</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="panel">
+      <h2>All Courses</h2>
+      <p class="hint">View all available courses in the university.</p>
+      <button id="courses-all-btn">Load Courses</button>
+      <div id="courses-list" class="data-list"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Register for a Course</h2>
+      <div class="field">
+        <label for="register-course-id">Course Id</label>
+        <input id="register-course-id" type="number" />
+      </div>
+      <button id="register-course-btn">Register</button>
+    </section>
+
+    <section class="panel">
+      <h2>Drop a Course</h2>
+      <div class="field">
+        <label for="drop-course-id">Course Id</label>
+        <input id="drop-course-id" type="number" />
+      </div>
+      <button id="drop-course-btn" class="danger">Drop</button>
+    </section>
+
+    <section class="panel">
+      <h2>My Registrations</h2>
+      <p class="hint">Courses you are enrolled in.</p>
+      <button id="registrations-mine-btn">Load My Registrations</button>
+      <div id="registrations-list" class="data-list"></div>
+    </section>
+
+    <section class="panel wide">
+      <h2>Response</h2>
+      <div id="status-line" class="status">Ready</div>
+      <pre id="response-output">{}</pre>
+    </section>
+  </main>
+</body>
+</html>
