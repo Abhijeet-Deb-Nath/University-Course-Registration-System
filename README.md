@@ -1,79 +1,80 @@
 # University Course Registration System
 
-Minimal Spring Boot REST API with JWT authentication and role-based authorization.
+A Spring Boot REST API with JWT authentication, role-based authorization, and Docker support.
 
 ## Features
-- JWT login with roles: `TEACHER` and `STUDENT`
-- Teachers can create/update/delete their courses
-- Students can view all courses and register/drop
-- Teachers can view students registered in their courses only
+- JWT authentication with `TEACHER` and `STUDENT` roles
+- Teachers: create, update, delete courses; view registered students
+- Students: view courses, register/drop courses
+- PostgreSQL database with JPA/Hibernate
+- Dockerized deployment
 
-## Quick Start (local)
-1. Start Postgres (Docker Compose is recommended)
-2. Run the app with Maven
+## Quick Start
 
-### Run Postgres with Docker Compose
+### Option 1: Docker Compose (Recommended)
 ```bash
-docker compose up -d db
+docker-compose up --build
 ```
+Access the app at: **http://localhost:8082**
 
-### Run the API
+### Option 2: Local Development
+1. Start PostgreSQL:
+   ```bash
+   docker-compose up -d db
+   ```
+2. Run the application:
+   ```bash
+   ./mvnw spring-boot:run
+   ```
+
+## API Endpoints
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| POST | `/api/auth/register` | Register user | - |
+| POST | `/api/auth/login` | Login, get JWT | - |
+| GET | `/api/courses` | List all courses | Any |
+| POST | `/api/courses` | Create course | Teacher |
+| POST | `/api/registrations` | Register for course | Student |
+| DELETE | `/api/registrations/{id}` | Drop course | Student |
+
+## Example Usage
+
+**Register:**
 ```bash
-./mvnw spring-boot:run
-```
-
-## Full Docker Compose
-```bash
-docker compose up --build
-```
-
-## Auth Flow
-1. Register user (teacher or student)
-2. Login to receive JWT access token
-3. Use `Authorization: Bearer <token>` in requests
-
-### Example Requests
-Register teacher:
-```bash
-curl -X POST http://localhost:8080/api/auth/register \
+curl -X POST http://localhost:8082/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{"username":"alice","password":"password","role":"TEACHER"}'
 ```
 
-Login:
+**Login:**
 ```bash
-curl -X POST http://localhost:8080/api/auth/login \
+curl -X POST http://localhost:8082/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"alice","password":"password"}'
 ```
 
-Create course (teacher only):
+**Create Course (with JWT):**
 ```bash
-curl -X POST http://localhost:8080/api/courses \
+curl -X POST http://localhost:8082/api/courses \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{"courseNo":"CSE101","courseName":"Intro to CS"}'
 ```
 
-Register for course (student only):
-```bash
-curl -X POST http://localhost:8080/api/registrations \
-  -H "Authorization: Bearer <token>" \
-  -H "Content-Type: application/json" \
-  -d '{"courseId":1}'
-```
+## Web UI
+Static pages available at:
+- `http://localhost:8082/index.html` - Login/Register
+- `http://localhost:8082/student.html` - Student dashboard
+- `http://localhost:8082/teacher.html` - Teacher dashboard
 
-## Local UI
-After starting the app, open:
-- http://localhost:8081/
+## Configuration
+Environment variables (with defaults in `application.properties`):
+- `DB_URL` - Database connection URL
+- `DB_USERNAME` / `DB_PASSWORD` - Database credentials
+- `JWT_SECRET` - Secret key for JWT signing
+- `JWT_EXPIRATION_SECONDS` - Token validity period
 
-Pages:
-- http://localhost:8081/index.html
-- http://localhost:8081/student.html
-- http://localhost:8081/teacher.html
-
-The UI lets you register, login, and call the REST API with your JWT token.
-
-## Notes
-- Update `JWT_SECRET` with a long random string before production use.
-- Default DB credentials are configured for local Docker Postgres.
+## Documentation
+- [Authentication & Authorization](authentication_authorization_explained.md)
+- [Dockerization](dockerization_explanation.md)

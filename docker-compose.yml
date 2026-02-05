@@ -2,9 +2,9 @@ services:
   db:
     image: postgres:16
     environment:
-      POSTGRES_DB: university
+      POSTGRES_DB: course_registration_db
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: 2107118
     ports:
       - "5432:5432"
     volumes:
@@ -14,13 +14,13 @@ services:
     depends_on:
       - db
     environment:
-      DB_URL: jdbc:postgresql://db:5432/university
+      DB_URL: jdbc:postgresql://db:5432/course_registration_db
       DB_USERNAME: postgres
-      DB_PASSWORD: postgres
+      DB_PASSWORD: 2107118
       JWT_SECRET: change-this-secret-to-a-long-random-string
       JWT_EXPIRATION_SECONDS: 3600
     ports:
-      - "8080:8080"
+      - "8082:8082"
 
 volumes:
   db_data:
