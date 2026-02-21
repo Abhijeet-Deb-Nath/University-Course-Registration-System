@@ -4,6 +4,7 @@
 
 1. **Spring Boot 4.0.2** requires Java 24, which isn't available in GitHub Actions
 2. **Lombok version missing** in `annotationProcessorPaths` causing compilation failure
+3. **Unnamed variables (`_`)** - Java 22+ preview feature used in code, not supported in Java 21
 
 ---
 
@@ -34,7 +35,16 @@
 </annotationProcessorPaths>
 ```
 
-### **4. Simplified CI Workflow (.github/workflows/ci.yml)**
+### **4. Fixed Unnamed Variables (CourseService.java)**
+```java
+// Before (Java 22+ preview feature)
+.ifPresent(_ -> { ... });
+
+// After (Java 21 compatible)
+.ifPresent(existing -> { ... });
+```
+
+### **5. Simplified CI Workflow (.github/workflows/ci.yml)**
 ```yaml
 - name: Build and Test
   run: mvn clean verify -B -e
@@ -47,20 +57,21 @@
 ```powershell
 cd "C:\Users\Ankon\Desktop\Projects\SEPM project\University Course Registration System"
 git add .
-git commit -m "Fix: Add Lombok version and use Spring Boot 3.2.5 for CI compatibility"
+git commit -m "Fix: Replace unnamed variables with named variables for Java 21 compatibility"
 git push
 ```
 
 ---
 
-## ✅ **Why This Works**
+## ✅ **All Issues Fixed**
 
-| Component | Before | After | Status |
-|-----------|--------|-------|--------|
-| Spring Boot | 4.0.2 (needs Java 24) | 3.2.5 (supports Java 21) | ✅ Fixed |
-| Java | 24 (not available) | 21 (LTS, available) | ✅ Fixed |
-| Lombok | No version in annotationProcessorPaths | Version 1.18.30 specified | ✅ Fixed |
-| Maven | ./mvnw (permission issue) | mvn (pre-installed) | ✅ Fixed |
+| Issue | Fix | Status |
+|-------|-----|--------|
+| Spring Boot 4.0.2 needs Java 24 | Downgraded to 3.2.5 | ✅ |
+| Java 24 not available | Changed to Java 21 | ✅ |
+| Lombok version missing | Added version 1.18.30 | ✅ |
+| Unnamed variables (`_`) | Replaced with `existing` | ✅ |
+| Maven wrapper permission | Use `mvn` directly | ✅ |
 
 ---
 

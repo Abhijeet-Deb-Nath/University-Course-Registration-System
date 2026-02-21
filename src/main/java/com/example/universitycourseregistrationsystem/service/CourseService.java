@@ -34,7 +34,7 @@ public class CourseService {
     @Transactional
     public Course createCourse(CourseRequest request) {
         User teacher = userService.requireRole(Role.TEACHER);
-        courseRepository.findByCourseNo(request.courseNo()).ifPresent(_ -> {
+        courseRepository.findByCourseNo(request.courseNo()).ifPresent(existing -> {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Course number already exists");
         });
         Course course = new Course();
@@ -52,7 +52,7 @@ public class CourseService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not your course");
         }
         if (!course.getCourseNo().equals(request.courseNo())) {
-            courseRepository.findByCourseNo(request.courseNo()).ifPresent(_ -> {
+            courseRepository.findByCourseNo(request.courseNo()).ifPresent(existing -> {
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "Course number already exists");
             });
         }
