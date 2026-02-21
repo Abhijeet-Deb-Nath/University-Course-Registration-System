@@ -106,7 +106,7 @@ class RegistrationRepositoryIntegrationTest {
         Registration registration = new Registration();
         registration.setStudent(student);
         registration.setCourse(course1);
-        registration = entityManager.persist(registration);
+        entityManager.persist(registration);
         entityManager.flush();
 
         // When
@@ -151,7 +151,7 @@ class RegistrationRepositoryIntegrationTest {
         anotherStudent.setUsername("student2");
         anotherStudent.setPasswordHash("hashedPassword");
         anotherStudent.setRole(Role.STUDENT);
-        anotherStudent = entityManager.persist(anotherStudent);
+        entityManager.persist(anotherStudent);
 
         Registration reg3 = new Registration();
         reg3.setStudent(anotherStudent);
@@ -175,7 +175,7 @@ class RegistrationRepositoryIntegrationTest {
         student2.setUsername("student2");
         student2.setPasswordHash("hashedPassword");
         student2.setRole(Role.STUDENT);
-        student2 = entityManager.persist(student2);
+        entityManager.persist(student2);
 
         Registration reg1 = new Registration();
         reg1.setStudent(student);
@@ -209,7 +209,7 @@ class RegistrationRepositoryIntegrationTest {
         Registration registration = new Registration();
         registration.setStudent(student);
         registration.setCourse(course1);
-        registration = entityManager.persist(registration);
+        entityManager.persist(registration);
         entityManager.flush();
 
         Long registrationId = registration.getId();
