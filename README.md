@@ -108,6 +108,8 @@ Automated testing runs on every push and pull request:
 ### Workflow File
 `.github/workflows/ci.yml` - Automation configuration (runs tests)
 
+**Important:** Includes `chmod +x mvnw` to fix Windows→Linux permission issues.
+
 ### Branch Protection Rules
 **Important:** Rules are configured on **GitHub website**, not in .yml file!
 
@@ -118,7 +120,10 @@ Automated testing runs on every push and pull request:
 
 **Result:** Direct pushes to main blocked, tests must pass before merge.
 
-**Detailed Guide:** See [branch_protection_setup.md](branch_protection_setup.md)
+**Detailed Guides:** 
+- [Branch Protection Setup](branch_protection_setup.md)
+- [CI/CD Troubleshooting](ci_cd_troubleshooting.md)
+- [CI Pipeline Fix](ci_pipeline_fix.md)
 
 ## Documentation
 - [Authentication & Authorization](authentication_authorization_explained.md)
