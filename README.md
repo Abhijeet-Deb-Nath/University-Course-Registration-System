@@ -135,7 +135,7 @@ Automated testing runs on every push and pull request:
 - [Branch Protection Setup](branch_protection_setup.md) - Step-by-step guide
 
 ## Technology Stack
-- **Backend**: Spring Boot 4.0.2, Java 21
+- **Backend**: Spring Boot 3.2.5, Java 21
 - **Security**: Spring Security, JWT
 - **Database**: PostgreSQL (production), H2 (testing)
 - **Testing**: JUnit 5, Mockito, Spring Boot Test
