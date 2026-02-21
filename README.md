@@ -1,143 +1,148 @@
 # University Course Registration System
 
-A Spring Boot REST API with JWT authentication, role-based authorization, Docker support, and CI/CD pipeline.
+A Spring Boot REST API for managing university course registrations with JWT authentication, comprehensive testing, and automated CI/CD.
 
-## Features
-- JWT authentication with `TEACHER` and `STUDENT` roles
-- Teachers: create, update, delete courses; view registered students
-- Students: view courses, register/drop courses
-- PostgreSQL database with JPA/Hibernate
-- **Comprehensive testing** (45 unit + integration tests)
-- **CI/CD pipeline** with GitHub Actions
-- Dockerized deployment
+## 🚀 Tech Stack
 
-## Quick Start
+- **Backend**: Spring Boot 3.2, Spring Security, Spring Data JPA
+- **Database**: PostgreSQL (Production), H2 (Tests)
+- **Auth**: JWT (JSON Web Tokens)
+- **Testing**: JUnit 5, Mockito, Spring Boot Test
+- **Build**: Maven
+- **CI/CD**: GitHub Actions
+- **Container**: Docker
 
-### Option 1: Docker Compose (Recommended)
-```bash
-docker-compose up --build
+## 📁 Project Structure
+
 ```
-Access the app at: **http://localhost:8082**
+src/
+├── main/java/.../universitycourseregistrationsystem/
+│   ├── controller/       # REST API endpoints
+│   ├── domain/           # JPA entities (User, Course, Registration)
+│   ├── dto/              # Request/Response objects
+│   ├── repository/       # Data access layer
+│   ├── security/         # JWT & Spring Security configuration
+│   ├── service/          # Business logic
+│   └── exception/        # Custom exceptions
+│
+└── test/java/            # Automated tests (14 tests total)
+    ├── service/          # Unit tests (6 tests with Mockito mocks)
+    ├── controller/       # Integration tests (6 tests)
+    └── repository/       # Repository tests (2 tests)
+```
 
-### Option 2: Local Development
-1. Start PostgreSQL:
-   ```bash
-   docker-compose up -d db
-   ```
-2. Run the application:
-   ```bash
-   ./mvnw spring-boot:run
-   ```
+## 🔌 API Endpoints
 
-## API Endpoints
-
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| POST | `/api/auth/register` | Register user | - |
-| POST | `/api/auth/login` | Login, get JWT | - |
-| GET | `/api/courses` | List all courses | Any |
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| POST | `/api/auth/register` | Register new user | No |
+| POST | `/api/auth/login` | Login & get JWT token | No |
+| GET | `/api/courses` | List all courses | No |
 | POST | `/api/courses` | Create course | Teacher |
+| PUT | `/api/courses/{id}` | Update course | Teacher (owner) |
+| DELETE | `/api/courses/{id}` | Delete course | Teacher (owner) |
+| GET | `/api/courses/my` | My courses | Teacher |
 | POST | `/api/registrations` | Register for course | Student |
-| DELETE | `/api/registrations/{id}` | Drop course | Student |
+| DELETE | `/api/registrations/{courseId}` | Drop course | Student |
+| GET | `/api/registrations/mine` | My registrations | Student |
+| GET | `/api/registrations/course/{id}/students` | Course students | Teacher (owner) |
 
-## Example Usage
+## 🏃 Running Locally
 
-**Register:**
+### Prerequisites
+- JDK 21
+- Maven or Docker
+
+### Option 1: Maven
 ```bash
-curl -X POST http://localhost:8082/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"username":"alice","password":"password","role":"TEACHER"}'
+./mvnw spring-boot:run
 ```
 
-**Login:**
+### Option 2: Docker
 ```bash
-curl -X POST http://localhost:8082/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"alice","password":"password"}'
+docker-compose up
 ```
 
-**Create Course (with JWT):**
+Application runs at: `http://localhost:8080`
+
+## 🧪 Testing
+
+The project includes **14 automated tests** covering unit and integration testing:
+
 ```bash
-curl -X POST http://localhost:8082/api/courses \
-  -H "Authorization: Bearer <token>" \
-  -H "Content-Type: application/json" \
-  -d '{"courseNo":"CSE101","courseName":"Intro to CS"}'
-```
-
-## Web UI
-Static pages available at:
-- `http://localhost:8082/index.html` - Login/Register
-- `http://localhost:8082/student.html` - Student dashboard
-- `http://localhost:8082/teacher.html` - Teacher dashboard
-
-## Configuration
-Environment variables (with defaults in `application.properties`):
-- `DB_URL` - Database connection URL
-- `DB_USERNAME` / `DB_PASSWORD` - Database credentials
-- `JWT_SECRET` - Secret key for JWT signing
-- `JWT_EXPIRATION_SECONDS` - Token validity period
-
-## Testing
-
-### Run Tests
-```bash
+# Run all tests
 ./mvnw test
+
+# Run specific test
+./mvnw test -Dtest=UserServiceTest
 ```
 
 ### Test Coverage
-- **45 comprehensive tests** (24 unit + 21 integration)
-- Unit tests: Service layer business logic with Mockito mocks
-- Integration tests: Full stack with H2 in-memory database
-- Tests authentication, authorization, CRUD operations, and database constraints
+- **Unit Tests** (6): Test business logic with mocked dependencies
+- **Integration Tests** (8): Test API endpoints and database with H2
 
-### Test Types
-- `*ServiceTest.java` - Unit tests (isolated, fast)
-- `*IntegrationTest.java` - Integration tests (full stack, real database)
+**For detailed testing documentation**, see [TESTING_AND_CI_CD_GUIDE.md](./TESTING_AND_CI_CD_GUIDE.md)
 
-## CI/CD Pipeline
+## 🔄 CI/CD Pipeline
 
-### GitHub Actions
-Automated testing runs on every push and pull request:
-- ✅ Compiles code
-- ✅ Runs all 45 tests with **H2 in-memory database** (industry standard)
-- ✅ Generates test reports
-- ✅ Reports pass/fail status to GitHub
+GitHub Actions automatically:
+1. ✅ Builds the project
+2. ✅ Runs all 14 tests
+3. ✅ Validates code quality
+4. ✅ Prevents merging if tests fail
 
-**Note:** Tests use H2 (not PostgreSQL) for speed and isolation - this is **industry best practice** for CI/CD.
+**Pipeline Status**: ![CI](https://github.com/YOUR_USERNAME/University-Course-Registration-System/workflows/CI%20Pipeline/badge.svg)
 
-### Workflow File
-`.github/workflows/ci.yml` - Automation configuration (runs tests)
+**For CI/CD details**, see [TESTING_AND_CI_CD_GUIDE.md](./TESTING_AND_CI_CD_GUIDE.md)
 
-**Important:** Includes `chmod +x mvnw` to fix Windows→Linux permission issues.
+## 🔒 Security
 
-### Branch Protection Rules
-**Important:** Rules are configured on **GitHub website**, not in .yml file!
+- JWT-based authentication
+- Password hashing with BCrypt
+- Role-based access control (STUDENT, TEACHER)
+- Protected endpoints
 
-**Setup:** Settings → Branches → Add rule for `main` branch:
-- ☑️ Require pull request before merging
-- ☑️ Require status checks to pass (select "CI Pipeline")
-- ☑️ Require branches to be up to date
+## 📚 Documentation
 
-**Result:** Direct pushes to main blocked, tests must pass before merge.
+| Document | Description |
+|----------|-------------|
+| [README.md](./README.md) | Project overview & quick start (this file) |
+| [TESTING_AND_CI_CD_GUIDE.md](./TESTING_AND_CI_CD_GUIDE.md) | Detailed guide on testing, CI/CD, branch protection |
 
-**Detailed Guides:** 
-- [Branch Protection Setup](branch_protection_setup.md)
-- [CI/CD Troubleshooting](ci_cd_troubleshooting.md)
-- [CI Pipeline Fix](ci_pipeline_fix.md)
+## 🔧 Environment Variables
 
-## Documentation
-- [Authentication & Authorization](authentication_authorization_explained.md)
-- [Dockerization](dockerization_explanation.md)
-- [Testing Guide](testing_explanation.md) - Comprehensive testing explanation
-- [Testing Summary](testing_summary.md) - Implementation summary
-- [CI/CD Pipeline](ci_cd_explanation.md) - GitHub Actions setup
-- [CI/CD Quick Reference](ci_cd_quick_reference.md) - Quick commands
-- [Branch Protection Setup](branch_protection_setup.md) - Step-by-step guide
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `SPRING_DATASOURCE_URL` | Database URL | `jdbc:postgresql://localhost:5432/university` |
+| `SPRING_DATASOURCE_USERNAME` | DB username | `postgres` |
+| `SPRING_DATASOURCE_PASSWORD` | DB password | `password` |
+| `APP_JWT_SECRET` | JWT signing key | (must be set, min 32 chars) |
+| `APP_JWT_EXPIRATION_SECONDS` | Token validity | `3600` (1 hour) |
 
-## Technology Stack
-- **Backend**: Spring Boot 3.2.5, Java 21
-- **Security**: Spring Security, JWT
-- **Database**: PostgreSQL (production), H2 (testing)
-- **Testing**: JUnit 5, Mockito, Spring Boot Test
-- **CI/CD**: GitHub Actions
-- **Containerization**: Docker, Docker Compose
+## 📦 Docker Setup
+
+```yaml
+# docker-compose.yml included
+services:
+  - postgres (database)
+  - app (Spring Boot)
+```
+
+```bash
+docker-compose up -d
+```
+
+## 🤝 Contributing
+
+1. Create feature branch: `git checkout -b feature/new-feature`
+2. Write code + tests
+3. Commit: `git commit -m "Add new feature"`
+4. Push: `git push origin feature/new-feature`
+5. Create Pull Request
+6. Wait for CI checks to pass ✅
+7. Get code review approval
+8. Merge to main
+
+## 📄 License
+
+MIT License
