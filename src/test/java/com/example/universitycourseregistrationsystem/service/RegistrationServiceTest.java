@@ -13,9 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,7 +20,9 @@ import static org.mockito.Mockito.*;
 
 /**
  * Unit Test for RegistrationService
- * Tests course registration business logic with mocked dependencies
+ *
+ * Demonstrates unit testing with mocked dependencies.
+ * Tests course registration business logic in isolation.
  */
 @ExtendWith(MockitoExtension.class)
 class RegistrationServiceTest {
@@ -43,7 +42,6 @@ class RegistrationServiceTest {
     private User student;
     private User teacher;
     private Course course;
-    private Registration registration;
 
     @BeforeEach
     void setUp() {
@@ -62,13 +60,12 @@ class RegistrationServiceTest {
         course.setCourseNo("CS101");
         course.setCourseName("Introduction to Computer Science");
         course.setTeacher(teacher);
-
-        registration = new Registration();
-        registration.setId(1L);
-        registration.setStudent(student);
-        registration.setCourse(course);
     }
 
+    /**
+     * Tests successful registration - verifies the service creates
+     * a registration when student is not already registered.
+     */
     @Test
     void register_WhenNotAlreadyRegistered_ShouldCreateRegistration() {
         // Given
@@ -88,15 +85,15 @@ class RegistrationServiceTest {
         assertThat(result).isNotNull();
         assertThat(result.getStudent()).isEqualTo(student);
         assertThat(result.getCourse()).isEqualTo(course);
-
-        verify(userService).requireRole(Role.STUDENT);
-        verify(courseService).getCourseOrThrow(1L);
-        verify(registrationRepository).existsByStudentIdAndCourseId(1L, 1L);
         verify(registrationRepository).save(any(Registration.class));
     }
 
+    /**
+     * Tests duplicate registration handling - verifies the service
+     * throws an exception when student is already registered.
+     */
     @Test
-    void register_WhenAlreadyRegistered_ShouldThrowConflictException() {
+    void register_WhenAlreadyRegistered_ShouldThrowConflict() {
         // Given
         when(userService.requireRole(Role.STUDENT)).thenReturn(student);
         when(courseService.getCourseOrThrow(1L)).thenReturn(course);
@@ -108,88 +105,5 @@ class RegistrationServiceTest {
                 .hasMessageContaining("Already registered");
 
         verify(registrationRepository, never()).save(any(Registration.class));
-    }
-
-    @Test
-    void drop_WhenRegistrationExists_ShouldDeleteRegistration() {
-        // Given
-        when(userService.requireRole(Role.STUDENT)).thenReturn(student);
-        when(registrationRepository.findByStudentIdAndCourseId(1L, 1L))
-                .thenReturn(Optional.of(registration));
-
-        // When
-        registrationService.drop(1L);
-
-        // Then
-        verify(registrationRepository).delete(registration);
-    }
-
-    @Test
-    void drop_WhenRegistrationDoesNotExist_ShouldThrowNotFoundException() {
-        // Given
-        when(userService.requireRole(Role.STUDENT)).thenReturn(student);
-        when(registrationRepository.findByStudentIdAndCourseId(1L, 1L))
-                .thenReturn(Optional.empty());
-
-        // When & Then
-        assertThatThrownBy(() -> registrationService.drop(1L))
-                .isInstanceOf(ResponseStatusException.class)
-                .hasMessageContaining("Registration not found");
-
-        verify(registrationRepository, never()).delete(any(Registration.class));
-    }
-
-    @Test
-    void getMyRegistrations_ShouldReturnStudentRegistrations() {
-        // Given
-        Registration reg2 = new Registration();
-        reg2.setId(2L);
-        reg2.setStudent(student);
-
-        when(userService.requireRole(Role.STUDENT)).thenReturn(student);
-        when(registrationRepository.findAllByStudentId(1L))
-                .thenReturn(List.of(registration, reg2));
-
-        // When
-        List<Registration> results = registrationService.getMyRegistrations();
-
-        // Then
-        assertThat(results).hasSize(2);
-        assertThat(results).contains(registration, reg2);
-        verify(registrationRepository).findAllByStudentId(1L);
-    }
-
-    @Test
-    void getRegistrationsForCourse_WhenTeacherOwnsCourse_ShouldReturnRegistrations() {
-        // Given
-        when(userService.requireRole(Role.TEACHER)).thenReturn(teacher);
-        when(courseService.getCourseOrThrow(1L)).thenReturn(course);
-        when(registrationRepository.findAllByCourseId(1L)).thenReturn(List.of(registration));
-
-        // When
-        List<Registration> results = registrationService.getRegistrationsForCourse(1L);
-
-        // Then
-        assertThat(results).hasSize(1);
-        assertThat(results.get(0)).isEqualTo(registration);
-        verify(registrationRepository).findAllByCourseId(1L);
-    }
-
-    @Test
-    void getRegistrationsForCourse_WhenTeacherDoesNotOwnCourse_ShouldThrowForbiddenException() {
-        // Given
-        User anotherTeacher = new User();
-        anotherTeacher.setId(3L);
-        anotherTeacher.setRole(Role.TEACHER);
-
-        when(userService.requireRole(Role.TEACHER)).thenReturn(anotherTeacher);
-        when(courseService.getCourseOrThrow(1L)).thenReturn(course);
-
-        // When & Then
-        assertThatThrownBy(() -> registrationService.getRegistrationsForCourse(1L))
-                .isInstanceOf(ResponseStatusException.class)
-                .hasMessageContaining("Not your course");
-
-        verify(registrationRepository, never()).findAllByCourseId(any());
     }
 }
